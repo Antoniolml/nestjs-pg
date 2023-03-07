@@ -1,5 +1,10 @@
-import { PartialType } from '@nestjs/swagger';
-import { IsEnum, IsNotEmpty, IsNumber, IsString } from 'class-validator';
+import {
+  IsEnum,
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsString,
+} from 'class-validator';
 import { ROLES } from '../../constants/roles';
 
 export class UserDTO {
@@ -32,4 +37,32 @@ export class UserDTO {
   role: ROLES;
 }
 
-export class userUpdateDTO extends PartialType(UserDTO) {}
+export class UserUpdateDTO {
+  @IsOptional()
+  @IsString()
+  firstName: string;
+
+  @IsOptional()
+  @IsString()
+  lastName: string;
+
+  @IsOptional()
+  @IsNumber()
+  age: number;
+
+  @IsOptional()
+  @IsString()
+  email: string;
+
+  @IsOptional()
+  @IsString()
+  username: string;
+
+  @IsOptional()
+  @IsString()
+  password: string;
+
+  @IsOptional()
+  @IsEnum(ROLES)
+  role: ROLES;
+}
