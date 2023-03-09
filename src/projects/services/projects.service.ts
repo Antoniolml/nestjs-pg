@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DeleteResult, Repository, UpdateResult } from 'typeorm';
-import { ProjectDTO, projectsUpdateDTO } from '../dto/project.dto';
+import { ProjectDTO, ProjectUpdateDTO } from '../dto/project.dto';
 import { projectsEntity } from '../entities/projects.entity';
 
 @Injectable()
@@ -24,6 +24,8 @@ export class ProjectsService {
       return await this.projectsRepository
         .createQueryBuilder('project')
         .where({ id })
+        .leftJoinAndSelect('project.usersIncludes', 'usersIncludes')
+        .leftJoinAndSelect('usersIncludes.user', 'user')
         .getOne();
     } catch (error) {
       throw new Error(error);
@@ -39,7 +41,7 @@ export class ProjectsService {
   }
 
   public async updateproject(
-    body: projectsUpdateDTO,
+    body: ProjectUpdateDTO,
     id: string,
   ): Promise<UpdateResult> {
     try {
@@ -54,7 +56,7 @@ export class ProjectsService {
     }
   }
 
-  public async deleteUser(id: string): Promise<DeleteResult> {
+  public async deleteProject(id: string): Promise<DeleteResult> {
     try {
       const project: DeleteResult = await this.projectsRepository.delete(id);
       if (!project.affected) throw new Error('project not found');

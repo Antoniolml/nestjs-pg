@@ -1,5 +1,4 @@
-import { PartialType } from '@nestjs/swagger';
-import { IsNotEmpty, IsString } from 'class-validator';
+import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
 export class ProjectDTO {
   @IsNotEmpty()
@@ -11,4 +10,12 @@ export class ProjectDTO {
   description: string;
 }
 
-export class projectsUpdateDTO extends PartialType(ProjectDTO) {}
+export class ProjectUpdateDTO {
+  @IsOptional()
+  @IsString()
+  name: string;
+
+  @IsOptional()
+  @IsString()
+  description: string;
+}
