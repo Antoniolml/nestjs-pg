@@ -9,47 +9,48 @@ import {
   Put,
   UseGuards,
 } from '@nestjs/common';
-import { PublicAccess } from 'src/auth/decorators/public.decorator';
+import { Roles } from 'src/auth/decorators/roles.decorator';
 import { AuthGuard } from 'src/auth/guards/auth.guard';
+import { RolesGuard } from 'src/auth/guards/roles.guard';
 import { UserDTO, UserToProjectDTO, UserUpdateDTO } from '../dto/user.dto';
 import { UsersService } from '../services/users.service';
 
-@UseGuards(AuthGuard)
+@UseGuards(AuthGuard, RolesGuard)
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
+  @Roles('ADMIN')
   @Get()
   public async findAllUsers() {
     return await this.usersService.findUsers();
   }
 
-  @PublicAccess()
-  @Get(':id')
-  public async findUserById(@Param('id', new ParseUUIDPipe()) id: string) {
+  @Get(':userId')
+  public async findUserById(@Param('userId', new ParseUUIDPipe()) id: string) {
     return await this.usersService.findUserById(id);
   }
 
   @Post('add-to-project')
-  public async createUser(@Body() body: UserToProjectDTO) {
+  public async createUserProject(@Body() body: UserToProjectDTO) {
     return await this.usersService.relationToProject(body);
   }
 
   @Post()
-  public async createUserPoject(@Body() body: UserDTO) {
+  public async createUser(@Body() body: UserDTO) {
     return await this.usersService.createUser(body);
   }
 
-  @Put(':id')
+  @Put(':userId')
   public async updateUser(
-    @Param('id', new ParseUUIDPipe()) id: string,
+    @Param('userId', new ParseUUIDPipe()) id: string,
     @Body() body: UserUpdateDTO,
   ) {
     return await this.usersService.updateUser(body, id);
   }
 
-  @Delete(':id')
-  public async deleteUser(@Param('id', new ParseUUIDPipe()) id: string) {
+  @Delete(':userId')
+  public async deleteUser(@Param('userId', new ParseUUIDPipe()) id: string) {
     return await this.usersService.deleteUser(id);
   }
 }
