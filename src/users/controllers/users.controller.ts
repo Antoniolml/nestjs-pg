@@ -9,6 +9,7 @@ import {
   Put,
   UseGuards,
 } from '@nestjs/common';
+import { PublicAccess } from 'src/auth/decorators/public.decorator';
 import { Roles } from 'src/auth/decorators/roles.decorator';
 import { AuthGuard } from 'src/auth/guards/auth.guard';
 import { RolesGuard } from 'src/auth/guards/roles.guard';
@@ -37,6 +38,7 @@ export class UsersController {
   }
 
   @Post()
+  @PublicAccess()
   public async createUser(@Body() body: UserDTO) {
     return await this.usersService.createUser(body);
   }
