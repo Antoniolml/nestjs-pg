@@ -76,7 +76,7 @@ export class AccessLevelGuard implements CanActivate {
       throw new UnauthorizedException("You're not part of this project");
     }
 
-    if (ACCESS_LEVEL[accessLevel] !== userExistInProject.accessLevel) {
+    if (ACCESS_LEVEL[accessLevel] > userExistInProject.accessLevel) {
       throw new UnauthorizedException("You're not part of this project");
     }
 
